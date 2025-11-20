@@ -22,6 +22,7 @@ ASSETS = {
 
     "player": "nave001.png",
     "meteor": "meteoro001.png",
+    "meteor_heavy": "meteoro_pesado.png",
     "meteor_life": "meteoro_vida.png",
 
     "sound_point": "classic-game-action-positive-5-224402.mp3",
@@ -54,6 +55,7 @@ backgrounds = [
 
 player_img = load_image(ASSETS["player"], (0, 0, 255), (80, 60))
 meteor_img = load_image(ASSETS["meteor"], (255, 0, 0), (40, 40))
+meteor_heavy_img = load_image(ASSETS["meteor_heavy"], (255, 0, 0), (40, 40))
 meteor_life_img = load_image(ASSETS["meteor_life"], (0, 255, 0), (40, 40))
 
 def load_sound(path):
@@ -99,7 +101,13 @@ meteor_types = []
 for _ in range(7):
     x = random.randint(0, WIDTH - 40)
     y = random.randint(-600, -40)
-    meteor_types.append("life" if random.random() < 0.10 else "normal")
+    rand = random.random()
+    if rand < 0.10:
+        meteor_types.append("life")      # 10% meteoro de vida
+    elif rand < 0.25:
+        meteor_types.append("heavy")     # 15% meteoro pesado
+    else:
+        meteor_types.append("normal")    # 75% meteoro normal
     meteor_list.append(pygame.Rect(x, y, 40, 40))
 
 meteor_speeds = [random.randint(3, 8) for _ in range(7)]
@@ -120,7 +128,7 @@ blink_timer = 0        # nave piscando
 blink_state = True     # alternar visibilidade
 
 paused = False         # PAUSE
-meteor_speed_bonus = 0
+meteor_speed_bonus = 0                                                                                                                                                              
 
 # ----------------------------- GAME LOOP -----------------------------
 running = True
@@ -175,7 +183,13 @@ while running:
         if meteor.y > HEIGHT:
             meteor.y = random.randint(-300, -40)
             meteor.x = random.randint(0, WIDTH - 40)
-            meteor_types[i] = "life" if random.random() < 0.10 else "normal"
+            r = random.random()
+            if r < 0.10:
+                meteor_types[i] = "life"
+            elif r < 0.25:
+                meteor_types[i] = "heavy"
+            else:
+                meteor_types[i] = "normal"
             score += 1
             if sound_point:
                 sound_point.play()
@@ -184,11 +198,20 @@ while running:
             if not invulnerable:  # só toma dano se não invulnerável
                 if meteor_types[i] == "life":
                     lives += 1
+
+                elif meteor_types[i] == "heavy":
+                    lives -= 2    # meteoro pesado dá DOIS de dano
+                    invulnerable = True
+                    invuln_end_time = time.time() + 2
+                    blink_timer = 30
+                    if sound_hit:
+                        sound_hit.play()
+
                 else:
                     lives -= 1
                     invulnerable = True
-                    invuln_end_time = time.time() + 2  # 2 segundos invencível
-                    blink_timer = 30  # piscadas
+                    invuln_end_time = time.time() + 2
+                    blink_timer = 30
                     if sound_hit:
                         sound_hit.play()
 
@@ -219,7 +242,13 @@ while running:
 
     # meteors
     for i, meteor in enumerate(meteor_list):
-        img = meteor_life_img if meteor_types[i] == "life" else meteor_img
+        if meteor_types[i] == "life":
+            img = meteor_life_img
+        elif meteor_types[i] == "heavy":
+            img = meteor_heavy_img
+        else:
+            img = meteor_img
+
         screen.blit(img, meteor)
 
     # HUD
