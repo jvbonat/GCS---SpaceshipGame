@@ -28,12 +28,12 @@ cd C:\Users\SeuUsuario\Desktop\SpaceEscapeGame
 
 Com o terminal aberto dentro da pasta do arquivo, rode:
 
-python spaceEscape.py
+python spaceScape.py
 
 
 ou dependendo da sua instalação:
 
-python3 spaceEscape.py
+python3 spaceScape.py
 
 
 Pronto! O jogo vai abrir em uma janela do Pygame. 🎮

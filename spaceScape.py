@@ -120,7 +120,7 @@ blink_timer = 0        # nave piscando
 blink_state = True     # alternar visibilidade
 
 paused = False         # PAUSE
-
+meteor_speed_bonus = 0
 
 # ----------------------------- GAME LOOP -----------------------------
 running = True
@@ -169,7 +169,8 @@ while running:
 
     # meteors
     for i, meteor in enumerate(meteor_list):
-        meteor.y += meteor_speeds[i]
+        meteor.y += meteor_speeds[i] + meteor_speed_bonus
+
 
         if meteor.y > HEIGHT:
             meteor.y = random.randint(-300, -40)
@@ -198,9 +199,15 @@ while running:
     if score >= 20 and phase == 1:
         phase = 2
         play_music(1)
+        for i in range(len(meteor_speeds)):
+            meteor_speeds[i] += 2   # aumenta velocidade real
+
     if score >= 50 and phase == 2:
         phase = 3
         play_music(2)
+        for i in range(len(meteor_speeds)):
+            meteor_speeds[i] += 1  # aumenta velocidade real
+
 
     # --------- DESENHAR NAVE (piscando se invulnerável) ----------
     if invulnerable:
