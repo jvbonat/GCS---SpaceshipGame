@@ -130,11 +130,3 @@ Se a pasta assets existe e contém todas as imagens e sons necessários
 Se o nome do arquivo principal é exatamente spaceEscape.py
 
 Se o comando está sendo executado dentro da pasta correta
-
-Se quiser, posso gerar também:
-✅ versão em inglês
-📄 versão PDF
-🎨 versão com badges, screenshots e icons
-🔥 ou um README avançado com GIF do gameplay
-
-Só pedir!
